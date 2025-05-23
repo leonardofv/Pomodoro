@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 export const HeaderContainer = styled.header`
 
-    border: 2px solid red;
+    /* border: 2px solid red; */
     display: flex;
     justify-content: space-between;
     
     nav {
 
-        border: 2px solid green;
+        /* border: 2px solid green; */
         display: flex;
         gap: 0.5rem;
         
