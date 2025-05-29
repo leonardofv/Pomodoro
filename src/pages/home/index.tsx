@@ -42,7 +42,7 @@ export function Home() {
 
     function handleCreateNewCycle(data: NewCycleFormData) {
         console.log(data);
-        reset();
+        reset(); //usar defalt values para resetar o formulário para default
     }
 
     const task = watch('task'); //observando valor do input task
