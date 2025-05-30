@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const HomeContainer = styled.main`
     /* border: 2px solid yellow; */
     flex: 1;
-
     display: flex;
     flex-direction: column;
     align-content: center;

@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Play } from "phosphor-react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod'; 
+import { useState } from 'react';
 import { FormContainer, 
          HomeContainer, 
          CountDownContainer, 
@@ -29,7 +30,18 @@ interface NewCycleFormData {
     minutesAmount: number
 }
 
+interface Cycle {
+    id: string,
+    task: string,
+    minutesAmount: number,
+}
+
 export function Home() {
+//                             tipo do useState, um array de Cycle       
+    const [ cycles, setCycles ] = useState<Cycle[]>([]); //iniciando como um array vazio de cycles
+    const [ activeCycleId, setActiveCycleId ] = useState<string | null>(null); //str or null porque no início da aplicação não tem nenhum ciclo ativo
+    const [ amountSecondsPassed, setAmountSecondsPassed ] = useState(0); //armazenar segundos que já se passaram desde o início do ciclo
+
 
     //desestruturação  do useForm              valores da interface no defaultValues      
     const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
@@ -41,9 +53,29 @@ export function Home() {
     });
 
     function handleCreateNewCycle(data: NewCycleFormData) {
-        console.log(data);
+        const newCycle: Cycle = {
+            id: String(new Date().getTime()),
+            task: data.task,
+            minutesAmount: data.minutesAmount,
+        }
+        setCycles((state) => [...state, newCycle]);  //pego o estado atual da variável de ciclos, copia o estado atual e adicona o novo ciclo
+        setActiveCycleId(newCycle.id);
         reset(); //usar defalt values para resetar o formulário para default
     }
+    
+    const activeCycle = cycles.find((cycle) =>  cycle.id === activeCycleId); //se o ciclo ativo é igual ao id do ciclo ativo, retorna o ciclo ativo
+
+    //se ciclo ativo, retorna o total de segundos do ciclo ativo.
+    const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0; 
+    const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
+
+    const minutesAmount = Math.floor(currentSeconds / 60); //minutos inteiros
+    const secondsAmount = currentSeconds % 60; // resto da visião dos segundos por 60 para pegar os segundos
+
+    //se for menor que 10, adiciona um 0 na frente
+    const minutes = String(minutesAmount).padStart(2, '0'); 
+    const seconds = String(secondsAmount).padStart(2, '0');
+
 
     const task = watch('task'); //observando valor do input task
     const isSubmitDisabled = !task; //botão desativado quando o input estiver vazio
@@ -82,11 +114,12 @@ export function Home() {
            </FormContainer>
 
            <CountDownContainer>
-            <span>0</span>
-            <span>0</span>
+            {/* trabalhando com strings como se forrem arrays nos minutes e seconds */}
+            <span>{minutes[0]}</span>
+            <span>{minutes[1]}</span>
             <Separator>:</Separator>
-            <span>0</span>
-            <span>0</span>
+            <span>{seconds[0]}</span>
+            <span>{seconds[1]}</span>
            </CountDownContainer>
 
             <StartCountDownButton disabled={isSubmitDisabled} type="submit">
