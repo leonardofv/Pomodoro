@@ -71,7 +71,7 @@ export function Home() {
 
     const minutesAmount = Math.floor(currentSeconds / 60); //minutos inteiros
     const secondsAmount = currentSeconds % 60; // resto da visião dos segundos por 60 para pegar os segundos
-//
+//teste git
     //se for menor que 10, adiciona um 0 na frente
     const minutes = String(minutesAmount).padStart(2, '0'); 
     const seconds = String(secondsAmount).padStart(2, '0');
